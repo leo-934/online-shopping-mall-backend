@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wjn.mall.dao.GoodsMapper">
+    <resultMap id="goodsMap" type="com.wjn.mall.entity.Goods">
+        <id column="goods_id" property="goodsId"/>
+        <result column="goods_name" property="goodsName"/>
+        <result column="goods_intro" property="goodsIntro"/>
+        <result column="goods_category_id" property="goodsCategoryId"/>
+        <result column="goods_cover_img" property="goodsCoverImg"/>
+        <result column="goods_carousel" property="goodsCarousel"/>
+        <result column="goods_detail_content" property="goodsDetailContent"/>
+        <result column="original_price" property="originalPrice"/>
+        <result column="selling_price" property="sellingPrice"/>
+        <result column="stock_num" property="stockNum"/>
+        <result column="tag" property="tag"/>
+        <result column="goods_sell_status" property="goodsSellStatus"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectByKeywordAndCategoryIdAndOrderAndLimit" resultMap="goodsMap">
+        select * from tb_mall_goods_info
+        <where>
+            <if test="keyword!=null and keyword != '' ">
+                ( goods_name like CONCAT('%',#{keyword},'%') or goods_intro like CONCAT('%',#{keyword},'%') )
+            </if>
+            <if test="goodsCategoryId!=null">
+                and goods_category_id = #{goodsCategoryId}
+            </if>
+        </where>
+        <if test="orderBy!=null">
+            <choose>
+                <when test="orderBy == 'new'">
+                    order by goods_id desc
+                </when>
+                <when test="orderBy == 'price'">
+                    order by selling_pirce desc
+                </when>
+                <otherwise>
+                    order by stock_num desc
+                </otherwise>
+            </choose>
+        </if>
+        <if test="offset!=null">
+            limit #{offset} , #{limit}
+        </if>
+    </select>
+
+    <select id="selectCountByKeywordAndCategoryId" resultType="integer">
+        select count(*) from
+        tb_mall_goods_info
+        <where>
+            <if test="keyword!=null and keyword != '' ">
+                ( goods_name like CONCAT('%',#{keyword},'%') or goods_intro like CONCAT('%',#{keyword},'%') )
+            </if>
+            <if test="goodsCategoryId!=null">
+                and goods_category_id = #{goodsCategoryId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByGoodsId" parameterType="long" resultMap="goodsMap">
+        select * from tb_mall_goods_info
+        where goods_id = #{goodsId}
+    </select>
+</mapper>

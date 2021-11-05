@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wjn.mall.dao.ShoppingCartMapper">
+    <resultMap id="shoppingCartItemMap" type="com.wjn.mall.entity.ShoppingCartItem">
+        <id column="cart_item_id" property="cartItemId"/>
+        <result column="user_id" property="userId"/>
+        <result column="goods_id" property="goodsId"/>
+        <result column="goods_count" property="goodsCount"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectItemList" resultMap="shoppingCartItemMap">
+        select * from tb_mall_shopping_cart_item
+        where user_id = #{userId}
+        <if test="offset!=null">
+            limit #{offset} , #{limit}
+        </if>
+    </select>
+    <select id="selectCount" resultType="integer">
+        select count(*) from tb_mall_shopping_cart_item
+    </select>
+    <select id="selectItemByItem" parameterType="com.wjn.mall.entity.ShoppingCartItem" resultMap="shoppingCartItemMap">
+        select * from tb_mall_shopping_cart_item
+        <where>
+            <if test="cartItemId != null">
+                cart_item_id = #{cartItemId}
+            </if>
+            <if test="userId!=null">
+                and user_id = #{userId}
+            </if>
+            <if test="goodsId!=null">
+                and goods_id = #{goodsId}
+            </if>
+            <if test="goodsCount!=null">
+                and goods_count = #{goodsCount}
+            </if>
+            <if test="isDeleted!=null">
+                and is_deleted = #{isDeleted}
+            </if>
+            <if test="createTime!=null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime!=null">
+                and update_time = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertItem" parameterType="com.wjn.mall.entity.ShoppingCartItem">
+        insert into tb_mall_shopping_cart_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cartItemId != null">
+                cart_item_id,
+            </if>
+            <if test="userId!=null">
+                user_id,
+            </if>
+            <if test="goodsId!=null">
+                goods_id,
+            </if>
+            <if test="goodsCount!=null">
+                goods_count,
+            </if>
+            <if test="isDeleted!=null">
+                is_deleted,
+            </if>
+            <if test="createTime!=null">
+                create_time,
+            </if>
+            <if test="updateTime!=null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cartItemId != null">
+                #{cartItemId},
+            </if>
+            <if test="userId!=null">
+                #{userId},
+            </if>
+            <if test="goodsId!=null">
+                #{goodsId},
+            </if>
+            <if test="goodsCount!=null">
+                #{goodsCount},
+            </if>
+            <if test="isDeleted!=null">
+                #{isDeleted},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByCartItemId" parameterType="com.wjn.mall.entity.ShoppingCartItem">
+        update tb_mall_shopping_cart_item
+        <set>
+            <if test="userId!=null">
+                user_id = #{userId},
+            </if>
+            <if test="goodsId!=null">
+                goods_id = #{goodsId},
+            </if>
+            <if test="goodsCount!=null">
+                goods_count = #{goodsCount},
+            </if>
+            <if test="isDeleted!=null">
+                is_deleted = #{isDeleted},
+            </if>
+            <if test="createTime!=null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime!=null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where cart_item_id = #{cartItemId}
+    </update>
+
+    <delete id="deleteItemByCartItemId" parameterType="long">
+        delete from tb_mall_shopping_cart_item
+        where cart_item_id = #{cartItemId}
+    </delete>
+
+</mapper>

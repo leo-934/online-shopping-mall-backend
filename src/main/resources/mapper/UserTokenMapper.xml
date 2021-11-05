@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wjn.mall.dao.UserTokenMapper">
+    <resultMap id="userTokenMap" type="com.wjn.mall.entity.UserToken">
+        <id column="user_id" property="userId"/>
+        <result column="token" property="token"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="expire_time" property="expireTime"/>
+        <!--<id column="user_id" property="userId"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="login_name" property="loginName"/>
+        <result column="password_md5" property="passwordMd5"/>
+        <result column="introduce_sign" property="introduceSign"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="locked_flag" property="lockedFlag"/>
+        <result column="create_time" property="createTime"/>-->
+    </resultMap>
+
+    <select id="selectUserByUserId" parameterType="long" resultMap="userTokenMap">
+        select * from tb_mall_user_token
+        where user_id = #{userId}
+    </select>
+
+    <select id="selectUserByToken" parameterType="string" resultMap="userTokenMap">
+        select * from tb_mall_user_token
+        where token = #{token}
+    </select>
+    <update id="updateUserByUserId" parameterType="com.wjn.mall.entity.UserToken">
+        update tb_mall_user_token
+        <set>
+            <if test="token!=null">
+                token = #{token},
+            </if>
+            <if test="updateTime!=null">
+                update_time = #{updateTime},
+            </if>
+            <if test="expireTime!=null">
+                expire_time = #{expireTime},
+            </if>
+        </set>
+        where user_id = #{userId}
+    </update>
+    <insert id="insertIntoUserToken" parameterType="com.wjn.mall.entity.UserToken">
+        insert into
+        tb_mall_user_token
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId!=null">
+                user_id,
+            </if>
+            <if test="token!=null">
+                token,
+            </if>
+            <if test="updateTime!=null">
+                update_time,
+            </if>
+            <if test="expireTime!=null">
+                expire_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId!=null">
+                #{userId},
+            </if>
+            <if test="token!=null">
+                #{token},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+            <if test="expireTime!=null">
+                #{expireTime},
+            </if>
+        </trim>
+    </insert>
+    <delete id="deleteByUserId" parameterType="long">
+        delete from tb_mall_user_token
+        where user_id = #{userId}
+    </delete>
+</mapper>
